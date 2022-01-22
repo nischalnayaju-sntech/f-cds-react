@@ -1,14 +1,16 @@
 import React from "react";
 import "./styles.css";
+import ReactDom from "react-dom";
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      txt: "App on Default State 🕊",
-      currentEvent: "---"
+      a: "🕊",
+      currentEvent: "---",
+      counter: 0
     };
-    this.update = this.update.bind(this);
+    this.updateEvent = this.updateEvent.bind(this);
   }
 
   /**
@@ -16,26 +18,47 @@ class App extends React.Component {
    * @param {*} evt
    */
   update(evt) {
-    this.setState({ txt: evt.target.value, currentEvent: evt.type });
+    this.setState({
+      a: ReactDom.findDOMNode(this.a).value,
+      b: this.refs.b.value
+    });
+  }
+
+  updateCounter(evt) {
+    this.setState({ counter: this.state.counter + 1 });
+  }
+
+  updateEvent(evt) {
+    this.setState({ currentEvent: evt.type });
   }
 
   render() {
     return (
       <div>
-        <Widget update={this.update.bind(this)} />
-        <Widget update={this.update.bind(this)} />
-        <h1>{this.state.txt}</h1>
-        <Title text={this.state.txt} />
-        <Button>
+        <Widget
+          ref={(component) => (this.a = component)}
+          update={this.update.bind(this)}
+        />{" "}
+        {this.state.a}
+        <hr />
+        <input
+          ref="b"
+          type="text"
+          onChange={this.update.bind(this)}
+        ></input>{" "}
+        {this.state.b}
+        <Title text={this.state.a} />
+        <Button click={this.updateCounter.bind(this)}>
           I <Heart /> React
-        </Button>
+        </Button>{" "}
+        <Heart /> : {this.state.counter}
         <h1 className="currentEvent">{this.state.currentEvent}</h1>
         <textarea
-          onKeyPress={this.update}
-          onCopy={this.update}
-          onCut={this.update}
-          onPaste={this.update}
-          onDoubleClick={this.update}
+          onKeyPress={this.updateEvent}
+          onCopy={this.updateEvent}
+          onCut={this.updateEvent}
+          onPaste={this.updateEvent}
+          onDoubleClick={this.updateEvent}
           cols="100"
           rows="5"
         ></textarea>
@@ -47,12 +70,18 @@ class App extends React.Component {
 /**
  * Create a child component -> Stateless function component
  */
-const Widget = (props) => <input type="text" onChange={props.update}></input>;
 
+class Widget extends React.Component {
+  render() {
+    return <input type="text" onChange={this.props.update} />;
+  }
+}
 /**
  * Create button component
  */
-const Button = (props) => <button>{props.children}</button>;
+const Button = (props) => (
+  <button onClick={props.click}>{props.children}</button>
+);
 
 class Heart extends React.Component {
   render() {
