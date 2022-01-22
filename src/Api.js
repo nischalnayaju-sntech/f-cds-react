@@ -34,6 +34,6 @@ class Api extends React.Component {
   }
 }
 
-const Person = (props) => <h4>{props.person.name}</h4>;
+const Person = (props) => <h4>{props.person}</h4>;
 
 export default Api;
