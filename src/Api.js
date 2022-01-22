@@ -6,7 +6,7 @@ class Api extends React.Component {
     this.state = { items: [] };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     fetch("https://swapi.dev/api/people/?format=json")
       .then((response) => response.json())
       .then(({ results: items }) => this.setState({ items }));
